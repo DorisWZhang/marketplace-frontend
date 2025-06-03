@@ -6,6 +6,7 @@ import TransitionPage from './pages/auth/TransitionPage'; // adjust path if need
 import AuthEntryPage from './pages/auth/AuthEntryPage';
 import LoginPage from './pages/auth/LoginPage';
 import SignUpPage from './pages/auth/SignUpPage';
+import MarketplacePage from './pages/marketplace/MarketplacePage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/loginpage" element={<LoginPage />} />
         <Route path="/authentrypage" element={<AuthEntryPage />} />
         <Route path='/signuppage' element={<SignUpPage/>}/>
+        <Route path='/marketplacepage' element={<MarketplacePage/>} />
       </Routes>
     </Router>
   );

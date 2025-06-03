@@ -1,7 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate} from 'react-router-dom';
 
 function SignUpPage() {
+  const navigate = useNavigate();
+  
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    navigate('/marketplacepage');
+  }
+
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-cream">
       <div className="bg-cream p-8 rounded-2xl shadow-lg w-full max-w-md">
@@ -13,7 +21,7 @@ function SignUpPage() {
           Only university-issued email addresses are eligible for registration.
         </p>
         
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSignUp}>
           <div>
             <label className="block text-sm text-gray-700">Full Name</label>
             <input

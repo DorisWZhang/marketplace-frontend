@@ -1,13 +1,21 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function LoginPage() {
+
+  const navigate = useNavigate();
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    navigate('/marketplacepage')
+  }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-cream">
       <div className="bg-cream p-8 rounded-2xl shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-main_pink mb-6 text-center">Login to Your Account</h2>
         
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleLogin}>
           <div>
             <label className="block text-sm text-gray-700">Email</label>
             <input
@@ -27,7 +35,7 @@ function LoginPage() {
           <button
             type="submit"
             className="w-full py-2 mt-4 bg-coral text-white rounded-lg font-semibold hover:bg-opacity-90 transition"
-          >
+          href="/marketplacepage">
             Log In
           </button>
         </form>
