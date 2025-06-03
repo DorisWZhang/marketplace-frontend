@@ -1,29 +1,38 @@
-import React from 'react'
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from "../assets/photos/CampusCart.png"
+import Logo from "../assets/photos/CampusCart.png";
 
 function LandingPage() {
-
   const navigate = useNavigate();
+  const [isFading, setIsFading] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigate('/transitionpage'); // route to transition page after 5s
-    }, 5000); // 5 seconds
+    const fadeTimer = setTimeout(() => {
+      setIsFading(true);
+    }, 2000);
 
-    return () => clearTimeout(timer); // cleanup if component unmounts early
+    const navTimer = setTimeout(() => {
+      navigate('/transitionpage');
+    }, 3000);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(navTimer);
+    };
   }, [navigate]);
+
   return (
-    <div className="flex flex-col items-center justify-center h-screen"
-      style = {{backgroundColor: "#FFFFF8"}}>
-      <img src={Logo} alt="Logo"  className="w-80 max-w-sm"/>
-      <h1 className="text-5xl" style = {{ color: '#C1486D', fontWeight: 400}}>
+    <div
+      className={`flex flex-col items-center justify-center h-screen bg-cream transition-opacity duration-1000 ${
+        isFading ? 'opacity-0' : 'opacity-100'
+      }`}
+    >
+      <img src={Logo} alt="Logo" className="w-80 max-w-sm" />
+      <h1 className="text-5xl" style={{ color: '#C1486D', fontWeight: 400 }}>
         campus cart
       </h1>
     </div>
-  )
+  );
 }
 
-
-export default LandingPage
+export default LandingPage;
