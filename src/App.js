@@ -1,11 +1,11 @@
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LandingPage from './pages/LandingPage'; // adjust path if needed
-import TransitionPage from './pages/TransitionPage'; // adjust path if needed
-import AuthEntryPage from './pages/AuthEntryPage';
-import LoginPage from './pages/LoginPage';
-import SignUpPage from './pages/SignUpPage';
+import LandingPage from './pages/auth/LandingPage'; // adjust path if needed
+import TransitionPage from './pages/auth/TransitionPage'; // adjust path if needed
+import AuthEntryPage from './pages/auth/AuthEntryPage';
+import LoginPage from './pages/auth/LoginPage';
+import SignUpPage from './pages/auth/SignUpPage';
 
 function App() {
   return (

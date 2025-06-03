@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Logo from "../assets/photos/CampusCart.png";
 
-function LandingPage() {
+function TransitionPage() {
   const navigate = useNavigate();
   const [isFading, setIsFading] = useState(false);
 
@@ -12,7 +11,7 @@ function LandingPage() {
     }, 2000);
 
     const navTimer = setTimeout(() => {
-      navigate('/transitionpage');
+      navigate('/authentrypage');
     }, 3000);
 
     return () => {
@@ -23,16 +22,15 @@ function LandingPage() {
 
   return (
     <div
-      className={`flex flex-col items-center justify-center h-screen bg-cream transition-opacity duration-1000 ${
+      className={`flex flex-col items-center justify-center h-screen bg-cream transition-opacity duration-1000 text-center px-6 ${
         isFading ? 'opacity-0' : 'opacity-100'
       }`}
     >
-      <img src={Logo} alt="Logo" className="w-80 max-w-sm" />
-      <h1 className="text-5xl" style={{ color: '#C1486D', fontWeight: 400 }}>
-        campus cart
-      </h1>
+      <p className="text-2xl font-light text-main_pink max-w-xl">
+        Because student life means packing light and shopping smart
+      </p>
     </div>
   );
 }
 
-export default LandingPage;
+export default TransitionPage;
