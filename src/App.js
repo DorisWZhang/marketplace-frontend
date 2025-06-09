@@ -8,6 +8,7 @@ import LoginPage from './pages/auth/LoginPage';
 import SignUpPage from './pages/auth/SignUpPage';
 import MarketplacePage from './pages/marketplace/MarketplacePage';
 import ProfilePage from './pages/profile/ProfilePage';
+import UserDetailsPage from './pages/auth/UserDetailsPage';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path='/signuppage' element={<SignUpPage/>}/>
         <Route path='/marketplacepage' element={<MarketplacePage/>} />
         <Route path='/profilepage' element={<ProfilePage/>} />
+        <Route path='/userdetailspage' element={<UserDetailsPage/>} />
       </Routes>
     </Router>
   );

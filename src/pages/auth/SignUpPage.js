@@ -6,7 +6,7 @@ function SignUpPage() {
   
   const handleSignUp = (e) => {
     e.preventDefault();
-    navigate('/marketplacepage');
+    navigate('/userdetailspage');
   }
 
 
