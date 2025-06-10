@@ -98,6 +98,23 @@ function UserDetailsPage() {
           </div>
 
           <div>
+            <label className="block text-sm text-gray-700">Gender</label>
+            <select
+              name="gender"
+              value={details.gender}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-main_pink bg-white"
+            >
+              <option value="">Select your gender</option>
+              <option value="UBC">Female</option>
+              <option value="UofT">Male</option>
+              <option value="McGill">Intersex</option>
+              <option value="Waterloo">Other</option>
+              <option value="Other">Prefer not to say</option>
+            </select>
+          </div>
+
+          <div>
             <label className="block text-sm text-gray-700">Location</label>
             <input
               type="text"
@@ -124,23 +141,6 @@ function UserDetailsPage() {
               <option value="Waterloo">University of Waterloo</option>
               <option value="Other">Other</option>
             </select>
-          </div>
-
-          <div>
-            <label className="block text-sm text-gray-700">Profile Picture</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="w-full px-4 py-2 border rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-main_pink"
-            />
-            {details.profilePic && (
-              <img
-                src={details.profilePic}
-                alt="Profile Preview"
-                className="mt-2 w-24 h-24 rounded-full object-cover mx-auto"
-              />
-            )}
           </div>
 
           <button
