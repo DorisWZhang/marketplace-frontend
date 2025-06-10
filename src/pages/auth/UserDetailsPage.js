@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 function UserDetailsPage() {
     
     const navigate = useNavigate();
+
+    const location = useLocation();
+
+    const { name, email, password } = location.state || {};
+
     const [details, setDetails] = useState({
         name: '',
         gender: '',
@@ -31,11 +36,40 @@ function UserDetailsPage() {
         }
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(details);
+
+        const userPayload = {
+            ...details,
+            email,
+            password,
+        };
+
+        console.log(userPayload); // For now
+        
+        try {
+            const response = await fetch('http://localhost:8080/users/createuser', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(userPayload),
+            });
+
+            if (response.ok) {
+            const savedUser = await response.json();
+            console.log('User created:', savedUser);
+            navigate('/marketplacepage');
+            } else {
+            console.error('Failed to create user');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
         navigate('/marketplacepage');
-    };
+};
+
 
 
     
@@ -74,7 +108,7 @@ function UserDetailsPage() {
         </div>
 
           <div>
-            <label className="block text-sm text-gray-700">Full Name</label>
+            <label className="block text-sm text-gray-700">Name</label>
             <input
               type="text"
               name="name"
@@ -106,11 +140,11 @@ function UserDetailsPage() {
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-main_pink bg-white"
             >
               <option value="">Select your gender</option>
-              <option value="UBC">Female</option>
-              <option value="UofT">Male</option>
-              <option value="McGill">Intersex</option>
-              <option value="Waterloo">Other</option>
-              <option value="Other">Prefer not to say</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="intersex">Intersex</option>
+              <option value="other">Other</option>
+              <option value="prefer not to say">Prefer not to say</option>
             </select>
           </div>
 
