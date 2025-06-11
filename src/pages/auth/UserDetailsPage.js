@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useUser } from "../../context/UserContext";
 
 function UserDetailsPage() {
     
     const navigate = useNavigate();
 
     const location = useLocation();
+
+    const { login } = useUser();
+
 
     const { name, email, password } = location.state || {};
 
@@ -59,6 +63,7 @@ function UserDetailsPage() {
             if (response.ok) {
             const savedUser = await response.json();
             console.log('User created:', savedUser);
+            login(savedUser);
             navigate('/marketplacepage');
             } else {
             console.error('Failed to create user');
@@ -66,8 +71,6 @@ function UserDetailsPage() {
         } catch (error) {
             console.error('Error:', error);
         }
-
-        navigate('/marketplacepage');
 };
 
 

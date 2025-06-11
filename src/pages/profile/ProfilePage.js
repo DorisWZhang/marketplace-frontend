@@ -1,8 +1,10 @@
 import React from 'react';
 import Logo from '../../assets/photos/CampusCart.png';
 import BottomTab from '../../components/BottomTab';
+import { useUser } from '../../context/UserContext';
 
 function ProfilePage() {
+
   const user = {
     name: 'Doris Zhang',
     location: 'UBC',
@@ -16,7 +18,9 @@ function ProfilePage() {
       { id: 2, title: 'Bluetooth Headphones' },
     ],
   };
+  
 
+    //const { user }= useUser();
   const Section = ({ title, items }) => (
     <section className="mb-10 w-full max-w-5xl">
       <h2 className="text-2xl text-main_pink mb-4 font-light">{title}</h2>
