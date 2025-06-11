@@ -31,7 +31,9 @@ function LoginPage() {
         navigate('/marketplacepage');
       } else {
         console.error('Failed to login');
-          }
+        const errorMessage = await response.text();
+        alert(errorMessage); 
+      }
     } catch (error) {
             console.error('Error:', error);
 
