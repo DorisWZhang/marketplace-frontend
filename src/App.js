@@ -9,6 +9,7 @@ import SignUpPage from './pages/auth/SignUpPage';
 import MarketplacePage from './pages/marketplace/MarketplacePage';
 import ProfilePage from './pages/profile/ProfilePage';
 import UserDetailsPage from './pages/auth/UserDetailsPage';
+import EditProfilePage from './pages/profile/EditProfilePage';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path='/marketplacepage' element={<MarketplacePage/>} />
         <Route path='/profilepage' element={<ProfilePage/>} />
         <Route path='/userdetailspage' element={<UserDetailsPage/>} />
+        <Route path='/editprofilepage' element={<EditProfilePage/>} />
       </Routes>
     </Router>
   );

@@ -2,9 +2,12 @@ import React from 'react';
 import Logo from '../../assets/photos/CampusCart.png';
 import BottomTab from '../../components/BottomTab';
 import { useUser } from '../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
+import ProfileInfoCard from '../../components/ProfileInfoCard';
 
 function ProfilePage() {
-
+  
+    /*
   const user = {
     name: 'Doris Zhang',
     location: 'UBC',
@@ -18,10 +21,12 @@ function ProfilePage() {
       { id: 2, title: 'Bluetooth Headphones' },
     ],
   };
+  */
   
 
-    //const { user }= useUser();
-  const Section = ({ title, items }) => (
+    const { user }= useUser();
+    const navigate = useNavigate();
+/*  const Section = ({ title, items }) => (
     <section className="mb-10 w-full max-w-5xl">
       <h2 className="text-2xl text-main_pink mb-4 font-light">{title}</h2>
       <ul className="space-y-2">
@@ -38,24 +43,16 @@ function ProfilePage() {
     </section>
   );
 
+  */
   return (
     <div className="flex flex-col min-h-screen bg-cream transition-opacity duration-1000">
       <div className="flex-grow flex flex-col items-center py-10 px-4">
         <img src={Logo} alt="Campus Cart Logo" className="w-24 mb-2" />
         <h1 className="text-5xl mb-6 text-main_pink font-light">your profile</h1>
+        <ProfileInfoCard/>
 
-        <div className="flex flex-col items-center mb-10">
-          <img
-            src={user.profilePic}
-            alt="Profile"
-            className="w-28 h-28 rounded-full border-4 border-main_pink object-cover mb-4"
-          />
-          <h2 className="text-2xl text-main_pink font-medium">{user.name}</h2>
-          <p className="text-gray-600">{user.location}</p>
-        </div>
+        
 
-        <Section title="Your Postings" items={user.postings} />
-        <Section title="Items Bought" items={user.purchases} />
       </div>
 
       <BottomTab />
