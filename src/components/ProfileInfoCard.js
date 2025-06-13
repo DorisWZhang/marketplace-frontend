@@ -44,12 +44,39 @@ export default function ProfileInfoCard() {
     }
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Send details to server or context here
-    console.log('Updated profile:', details);
-    setCardState('view');
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log(details);
+
+        if (!user.id) {
+            console.error("User ID missing, cannot update user");
+            return;
+        }
+
+        try {
+            const response = await fetch(`http://localhost:8080/users/updateuser/${user.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(details),
+            });
+
+            if (response.ok) {
+            const savedUser = await response.json();
+            console.log('User updated:', savedUser);
+            // Optionally update your app state here with savedUser
+            } else {
+            console.error('Failed to update user');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+        console.log('Updated profile:', details);
+        setCardState('view');
+    };
+
 
   const handleCancel = () => {
     setDetails({ ...user });
