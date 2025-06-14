@@ -18,6 +18,7 @@ export function UserProvider({ children }) {
         setUser(null);
         localStorage.removeItem('user');
     };
+    
 
     return (
         <UserContext.Provider value={{ user, setUser, login, logout }}>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
 
 export default function ProfileInfoCard() {
-  const { user } = useUser();
+  const { user, setUser } = useUser();
 
   const [cardState, setCardState] = useState('view');
   const [details, setDetails] = useState({ ...user });
@@ -64,6 +64,7 @@ export default function ProfileInfoCard() {
 
             if (response.ok) {
             const savedUser = await response.json();
+            setUser(savedUser);
             console.log('User updated:', savedUser);
             // Optionally update your app state here with savedUser
             } else {
@@ -72,7 +73,6 @@ export default function ProfileInfoCard() {
         } catch (error) {
             console.error('Error:', error);
         }
-
         console.log('Updated profile:', details);
         setCardState('view');
     };
