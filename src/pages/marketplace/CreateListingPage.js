@@ -3,18 +3,23 @@ import { useNavigate } from 'react-router-dom';
 import { useUser } from "../../context/UserContext";
 
 function CreateListingPage({ onClose }) {
+  
+  const { user } = useUser();
   const [item, setItem] = useState({
     title: '',
+    sellerID: user.id, 
     description: '',
     price: '',
     location: '',
     postedTime: '',
-    image: null,
+    views: 0,
+    image: '',
+    sold: false,
+    
   });
 
   const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
-  const { user } = useUser();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,43 +30,50 @@ function CreateListingPage({ onClose }) {
   };
 
   const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  const file = e.target.files[0];
+  if (!file) {
+    setImagePreview(null);
+    setItem((prev) => ({ ...prev, image: null }));
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onloadend = () => {
     setItem((prev) => ({
       ...prev,
-      image: file,
+      image: reader.result, // Base64 string
     }));
-    if (file) {
-      setImagePreview(URL.createObjectURL(file));
-    } else {
-      setImagePreview(null);
-    }
+    setImagePreview(reader.result);
   };
+  reader.readAsDataURL(file); // convert to base64
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Prepare form data for file upload
-    const formData = new FormData();
-    formData.append('title', item.title);
-    formData.append('description', item.description);
-    formData.append('price', item.price);
-    formData.append('location', item.location);
-    formData.append('postedTime', new Date().toISOString());
-    if (item.image) {
-      formData.append('image', item.image);
-    }
+    // Don't include postedTime — backend will set it
+    const { postedTime, ...itemToSend } = item;
 
-    // TODO: Replace with your API endpoint
     try {
-      await fetch('/api/items', {
+      const response = await fetch('http://localhost:8080/items/createitem', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(itemToSend),
       });
-      navigate('/marketplacepage');
+      if (response.ok) {
+        const createdItem = await response.json();
+        console.log('Listing created:', createdItem);
+        onClose();
+      }
     } catch (err) {
       alert('Failed to create listing.');
+      console.log(itemToSend);
     }
   };
+
 
   return (
     <div className="max-w-lg mx-auto mt-10 bg-cream rounded-xl shadow-lg p-8 relative">
