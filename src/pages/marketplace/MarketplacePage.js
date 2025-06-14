@@ -8,101 +8,122 @@ function MarketplacePage() {
   const userLocation = 'UBC';
 
   useEffect(() => {
-    const mockItems = [
-      {
-        id: 1,
-        title: "Mini Fridge",
-        price: 75,
-        location: "UBC",
-        postedAt: "2025-06-01T14:32:00Z",
-        views: 120,
-        image: "https://via.placeholder.com/150x150.png?text=Mini+Fridge"
-      },
-      {
-        id: 2,
-        title: "Textbook: Data Structures",
-        price: 40,
-        location: "SFU",
-        postedAt: "2025-06-02T10:00:00Z",
-        views: 30,
-        image: "https://via.placeholder.com/150x150.png?text=Textbook"
-      },
-      {
-        id: 3,
-        title: "Office Chair",
-        price: 50,
-        location: "UBC",
-        postedAt: "2025-05-29T18:45:00Z",
-        views: 85,
-        image: "https://via.placeholder.com/150x150.png?text=Office+Chair"
-      },
-      {
-        id: 4,
-        title: "iPad Air (4th Gen)",
-        price: 400,
-        location: "Langara",
-        postedAt: "2025-06-03T08:30:00Z",
-        views: 220,
-        image: "https://via.placeholder.com/150x150.png?text=iPad"
-      },
-      {
-        id: 5,
-        title: "LED Desk Lamp",
-        price: 15,
-        location: "UBC",
-        postedAt: "2025-06-03T07:00:00Z",
-        views: 10,
-        image: "https://via.placeholder.com/150x150.png?text=Desk+Lamp"
-      },
-      {
-        id: 6,
-        title: "Laptop Stand",
-        price: 20,
-        location: "SFU",
-        postedAt: "2025-05-28T16:00:00Z",
-        views: 55,
-        image: "https://via.placeholder.com/150x150.png?text=Laptop+Stand"
-      },
-      {
-        id: 7,
-        title: "Air Fryer",
-        price: 60,
-        location: "UBC",
-        postedAt: "2025-06-01T12:00:00Z",
-        views: 90,
-        image: "https://via.placeholder.com/150x150.png?text=Air+Fryer"
-      },
-      {
-        id: 8,
-        title: "Bed Frame (Queen)",
-        price: 100,
-        location: "Langara",
-        postedAt: "2025-06-02T15:15:00Z",
-        views: 45,
-        image: "https://via.placeholder.com/150x150.png?text=Bed+Frame"
-      },
-      {
-        id: 9,
-        title: "MacBook Charger (USB-C)",
-        price: 25,
-        location: "UBC",
-        postedAt: "2025-06-03T09:00:00Z",
-        views: 15,
-        image: "https://via.placeholder.com/150x150.png?text=Charger"
-      },
-      {
-        id: 10,
-        title: "Monitor (27” 1080p)",
-        price: 130,
-        location: "SFU",
-        postedAt: "2025-06-01T20:00:00Z",
-        views: 70,
-        image: "https://via.placeholder.com/150x150.png?text=Monitor"
-      }
-    ];
+  const mockItems = [
+    {
+      id: 1,
+      title: "Mini Fridge",
+      description: "Compact mini fridge perfect for dorm use.",
+      price: 75,
+      location: "UBC",
+      postedAt: "2025-06-01T14:32:00Z",
+      views: 120,
+      image: "https://via.placeholder.com/150x150.png?text=Mini+Fridge",
+      sellerName: "Alex Johnson"
+    },
+    {
+      id: 2,
+      title: "Textbook: Data Structures",
+      description: "Used textbook for CPSC 221 in great condition.",
+      price: 40,
+      location: "SFU",
+      postedAt: "2025-06-02T10:00:00Z",
+      views: 30,
+      image: "https://via.placeholder.com/150x150.png?text=Textbook",
+      sellerName: "Mei Ling"
+    },
+    {
+      id: 3,
+      title: "Office Chair",
+      description: "Ergonomic office chair with lumbar support.",
+      price: 50,
+      location: "UBC",
+      postedAt: "2025-05-29T18:45:00Z",
+      views: 85,
+      image: "https://via.placeholder.com/150x150.png?text=Office+Chair",
+      sellerName: "Daniel Chen"
+    },
+    {
+      id: 4,
+      title: "iPad Air (4th Gen)",
+      description: "iPad with 64GB storage and no scratches.",
+      price: 400,
+      location: "Langara",
+      postedAt: "2025-06-03T08:30:00Z",
+      views: 220,
+      image: "https://via.placeholder.com/150x150.png?text=iPad",
+      sellerName: "Sarah Lee"
+    },
+    {
+      id: 5,
+      title: "LED Desk Lamp",
+      description: "Minimalist desk lamp with brightness control.",
+      price: 15,
+      location: "UBC",
+      postedAt: "2025-06-03T07:00:00Z",
+      views: 10,
+      image: "https://via.placeholder.com/150x150.png?text=Desk+Lamp",
+      sellerName: "Jacob Nguyen"
+    },
+    {
+      id: 6,
+      title: "Laptop Stand",
+      description: "Adjustable aluminum laptop stand.",
+      price: 20,
+      location: "SFU",
+      postedAt: "2025-05-28T16:00:00Z",
+      views: 55,
+      image: "https://via.placeholder.com/150x150.png?text=Laptop+Stand",
+      sellerName: "Emily Park"
+    },
+    {
+      id: 7,
+      title: "Air Fryer",
+      description: "Compact air fryer, barely used.",
+      price: 60,
+      location: "UBC",
+      postedAt: "2025-06-01T12:00:00Z",
+      views: 90,
+      image: "https://via.placeholder.com/150x150.png?text=Air+Fryer",
+      sellerName: "Tony Zhao"
+    },
+    {
+      id: 8,
+      title: "Bed Frame (Queen)",
+      description: "Queen-sized metal bed frame, easy assembly.",
+      price: 100,
+      location: "Langara",
+      postedAt: "2025-06-02T15:15:00Z",
+      views: 45,
+      image: "https://via.placeholder.com/150x150.png?text=Bed+Frame",
+      sellerName: "Rina Kapoor"
+    },
+    {
+      id: 9,
+      title: "MacBook Charger (USB-C)",
+      description: "60W USB-C charger for MacBook Pro/Air.",
+      price: 25,
+      location: "UBC",
+      postedAt: "2025-06-03T09:00:00Z",
+      views: 15,
+      image: "https://via.placeholder.com/150x150.png?text=Charger",
+      sellerName: "Carlos Perez"
+    },
+    {
+      id: 10,
+      title: "Monitor (27” 1080p)",
+      description: "27-inch FHD monitor, perfect for coding.",
+      price: 130,
+      location: "SFU",
+      postedAt: "2025-06-01T20:00:00Z",
+      views: 70,
+      image: "https://via.placeholder.com/150x150.png?text=Monitor",
+      sellerName: "Lena Wu"
+    }
+  ];
 
-    setItems(mockItems);
-  }, []);
+  setItems(mockItems);
+}, []);
+
 
   const itemsNearYou = items.filter((item) => item.location === userLocation);
   const newlyPosted = [...items].sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt));
