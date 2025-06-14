@@ -1,11 +1,18 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ItemCard from '../../components/ItemCard';
 import BottomTab from '../../components/BottomTab';
 import Logo from '../../assets/photos/CampusCart.png';
+import { BsFileEarmarkPlus } from "react-icons/bs";
+import Modal from '../../components/Modal';
+import CreateListingPage from './CreateListingPage';
+import PostingSection from '../../components/PostingSection';
 
 function MarketplacePage() {
   const [items, setItems] = useState([]);
+  const [showModal, setShowModal] = useState(false);
   const userLocation = 'UBC';
+  const navigate = useNavigate();
 
   useEffect(() => {
   const mockItems = [
@@ -129,29 +136,31 @@ function MarketplacePage() {
   const newlyPosted = [...items].sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt));
   const popularItems = items.filter((item) => item.views > 50);
 
-  const Section = ({ title, items }) => (
-    <section className="mb-10 w-full max-w-5xl">
-      <h2 className="text-2xl text-main_pink mb-4 font-light">{title}</h2>
-      <div className="flex overflow-x-auto space-x-4">
-        {items.length ? (
-          items.map((item) => <ItemCard key={item.id} item={item} />)
-        ) : (
-          <p className="text-gray-600 text-sm italic">No items available.</p>
-        )}
-      </div>
-    </section>
-  );
-
   return (
     <div className="flex flex-col h-screen bg-cream">
       <div className="flex-grow overflow-y-auto px-4 py-10 flex flex-col items-center">
         <img src={Logo} alt="Campus Cart Logo" className="w-24 mb-2" />
         <h1 className="text-5xl mb-8 text-main_pink font-light">campus cart</h1>
 
-        <Section title="Near You" items={itemsNearYou} />
-        <Section title="Newly Posted" items={newlyPosted} />
-        <Section title="Popular" items={popularItems} />
+        <PostingSection title="Near You" items={itemsNearYou} />
+        <PostingSection title="Newly Posted" items={newlyPosted} />
+        <PostingSection title="Popular" items={popularItems} />
       </div>
+
+      {/* Floating circular "+" button */}
+      <button
+        className="fixed right-8 bottom-24 z-50 bg-main_pink text-white rounded-full w-16 h-16 flex items-center justify-center text-4xl leading-none p-0 shadow-lg hover:bg-pink-600 transition"
+        aria-label="Add Listing"
+        onClick={() => setShowModal(true)}
+      >
+        <BsFileEarmarkPlus/>
+      </button>
+
+      {showModal && (
+        <Modal onClose={() => setShowModal(false)}>
+          <CreateListingPage onClose={() => setShowModal(false)} />
+        </Modal>
+      )}
 
       <div className="sticky bottom-0 w-full">
         <BottomTab />

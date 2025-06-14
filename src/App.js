@@ -11,6 +11,7 @@ import ProfilePage from './pages/profile/ProfilePage';
 import UserDetailsPage from './pages/auth/UserDetailsPage';
 import EditProfilePage from './pages/profile/EditProfilePage';
 import ItemPage from './pages/marketplace/ItemPage';
+import CreateListingPage from './pages/marketplace/CreateListingPage';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path='/userdetailspage' element={<UserDetailsPage/>} />
         <Route path='/editprofilepage' element={<EditProfilePage/>} />
         <Route path='/itempage/:itemId' element={<ItemPage/>} />
+        <Route path='/createlistingpage' element={<CreateListingPage/>} />
       </Routes>
     </Router>
   );

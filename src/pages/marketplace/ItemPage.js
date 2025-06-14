@@ -21,7 +21,7 @@ function ItemPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto bg-cream rounded-2xl shadow-md overflow-hidden m-4">
+    <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden m-4">
       <img
         src={item.image || ""}
         alt={item.title}
