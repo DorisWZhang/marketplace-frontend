@@ -19,6 +19,10 @@ function ProfilePage() {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        const sellerName = user.name;
+        data.forEach(item => {
+          item.sellerName = sellerName; // Ensure each item has the seller name
+        });
         setUserPostings(data);
       } catch (error) {
         console.error('Error fetching user postings:', error);
