@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useUser } from '../../context/UserContext';
 
 function ItemPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { item } = location.state || {};
+  const [item, setItem] = useState(location.state?.item || {});
+  const { user } = useUser();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editItem, setEditItem] = useState(location.state?.item || {});
 
   if (!item) {
     return (
@@ -19,6 +23,38 @@ function ItemPage() {
       </div>
     );
   }
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditItem((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`http://localhost:8080/items/updateitem/${editItem.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(editItem),
+      });
+      if (response.ok) {
+        const updatedItem = await response.json();
+        setEditItem(updatedItem);
+        setItem(updatedItem); // <-- update the main item state
+        setIsEditing(false);
+      } else {
+        alert('Failed to update item. Please try again.');
+      }
+    } catch (error) {
+      console.error('Error updating item:', error);
+      alert('An error occurred while updating the item. Please try again.');
+    }
+  };
 
   return (
     <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden m-4">
@@ -36,13 +72,68 @@ function ItemPage() {
           <h2 className="text-lg font-semibold text-gray-800 mb-1">Description</h2>
           <p className="text-gray-700 text-sm">{item.description}</p>
         </div>
-
-        <button
-          onClick={() => navigate('/marketplacepage')}
-          className="mt-6 bg-main_pink text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition"
-        >
-          Back
-        </button>
+        <div className="flex">
+          <button
+            onClick={() => navigate('/marketplacepage')}
+            className="mt-6 bg-main_pink text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition"
+          >
+            Back
+          </button>
+          {user && user.id === item.sellerID && !isEditing && (
+            <button
+              className="mt-6 ml-8 bg-main_pink text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition"
+              onClick={() => setIsEditing(true)}
+            >
+              Edit Listing
+            </button>
+          )}
+        </div>
+        {isEditing && (
+          <form onSubmit={handleEditSubmit} className="mt-8 space-y-4">
+            <input
+              type="text"
+              name="title"
+              value={editItem.title}
+              onChange={handleEditChange}
+              className="w-full border rounded px-3 py-2"
+            />
+            <textarea
+              name="description"
+              value={editItem.description}
+              onChange={handleEditChange}
+              className="w-full border rounded px-3 py-2"
+            />
+            <input
+              type="number"
+              name="price"
+              value={editItem.price}
+              onChange={handleEditChange}
+              className="w-full border rounded px-3 py-2"
+            />
+            <input
+              type="text"
+              name="location"
+              value={editItem.location}
+              onChange={handleEditChange}
+              className="w-full border rounded px-3 py-2"
+            />
+            <div className="flex space-x-4">
+              <button
+                type="submit"
+                className="bg-main_pink text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition"
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsEditing(false)}
+                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-400 transition"
+              >
+                Cancel
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   );
