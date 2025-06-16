@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 
 function ItemPage() {
   const navigate = useNavigate();
@@ -86,6 +88,33 @@ function ItemPage() {
             >
               Edit Listing
             </button>
+          )}
+          {user && user.id === item.sellerID && (
+            <div
+              className="mt-6 ml-8 bg-main_pink text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition cursor-pointer flex items-center justify-center"
+              title="Delete Listing"  
+              onClick={async () => {
+                  if (window.confirm('Are you sure you want to delete this item?')) {
+                    try {
+                      const response = await fetch(`http://localhost:8080/items/deleteitem/${item.id}`, {
+                        method: 'DELETE',
+                      });
+                      if (response.ok) {
+                        navigate('/marketplacepage');
+                      } else {
+                        alert('Failed to delete item. Please try again.');
+                      }
+                    } catch (error) {
+                      console.error('Error deleting item:', error);
+                      alert('An error occurred while deleting the item. Please try again.');
+                    }
+                  }
+                }}
+            >
+              <FontAwesomeIcon
+                icon={faTrashCan}
+              />
+            </div>
           )}
         </div>
         {isEditing && (
