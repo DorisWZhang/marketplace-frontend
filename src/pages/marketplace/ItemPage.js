@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,6 +15,28 @@ function ItemPage() {
   const [editItem, setEditItem] = useState(location.state?.item || {});
   const [isFavourite, setIsFavourite] = useState(false);
 
+  // check if item is already favourited
+  useEffect(() => {
+    const checkFavourite = async () => {
+      if (user && item.id) {
+        try {
+          const response = await fetch(`http://localhost:8080/favourites/check/${user.id}/${item.id}`);
+          if (response.ok) {
+            const isFav = await response.json(); // expecting a boolean true/false
+            setIsFavourite(isFav);
+          } else {
+            setIsFavourite(false);
+          }
+        } catch (error) {
+          console.error('Error checking favourites:', error);
+        }
+      }
+    };
+
+    checkFavourite();
+  }, [user, item.id]);
+
+
   if (!item) {
     return (
       <div className="text-center mt-20 text-red-500">
@@ -29,6 +51,7 @@ function ItemPage() {
     );
   }
 
+  
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditItem((prev) => ({
@@ -155,13 +178,12 @@ function ItemPage() {
                 <FontAwesomeIcon icon={faTrashCan} />
               </div>
             )}
-            {/* Heart icon is always visible if user is logged in */}
             {user && (
               <div className="mt-8 ml-8 flex items-center">
                 <FontAwesomeIcon
                   icon={isFavourite ? faHeart : faRegHeart}
                   className="text-main_pink text-2xl cursor-pointer"
-                  onClick={() => setIsFavourite((prev) => !prev)}
+                  onClick={() => handleFavourite()}
                   title={isFavourite ? "Remove from favourites" : "Add to favourites"}
                 />
               </div>
