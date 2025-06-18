@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as faRegHeart } from '@fortawesome/free-regular-svg-icons';
 
 function ItemPage() {
   const navigate = useNavigate();
@@ -11,6 +13,7 @@ function ItemPage() {
   const { user } = useUser();
   const [isEditing, setIsEditing] = useState(false);
   const [editItem, setEditItem] = useState(location.state?.item || {});
+  const [isFavourite, setIsFavourite] = useState(false);
 
   if (!item) {
     return (
@@ -58,42 +61,80 @@ function ItemPage() {
     }
   };
 
-  return (
-    <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-md overflow-hidden m-4">
-      <img
-        src={item.image || ""}
-        alt={item.title}
-        className="w-full h-72 object-cover"
-      />
-      <div className="p-6">
-        <h1 className="text-2xl font-bold text-main_pink">{item.title}</h1>
-        <p className="text-sm text-gray-500 mt-1">Sold by: {item.sellerName}</p>
-        <p className="text-lg font-semibold text-coral mt-4">${item.price}</p>
+  const handleFavourite = () => {
+    if (user) {
+      if (isFavourite) {
+        try {
+          const response = fetch(`http://localhost:8080/favourites/remove/${user.id}/${item.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ itemId: item.id, userId: user.id }),
+          });
+          setIsFavourite(false);
+          alert('Item removed from favourites.');
+        } catch (error) {
+          console.error('Error removing from favourites:', error);
+          alert('An error occurred while removing the item from favourites. Please try again.');
+        }
+      } else {
+        try {
+          const response = fetch(`http://localhost:8080/favourites/add`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ itemId: item.id, userId: user.id }),
+          });
+          setIsFavourite(true);
+          alert('Item added to favourites.');
+        } catch (error) {
+          console.error('Error adding to favourites:', error);
+          alert('An error occurred while adding the item to favourites. Please try again.');
+        }
+        
+      }
+    }
+  }
 
-        <div className="mt-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-1">Description</h2>
-          <p className="text-gray-700 text-sm">{item.description}</p>
-        </div>
-        <div className="flex">
-          <button
-            onClick={() => navigate('/marketplacepage')}
-            className="mt-6 bg-main_pink text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition"
-          >
-            Back
-          </button>
-          {user && user.id === item.sellerID && !isEditing && (
+  return (
+    <div className="min-h-screen w-full bg-cream flex items-center justify-center">
+      <div className="w-full max-w-4xl bg-white rounded-3xl shadow-2xl overflow-hidden m-8">
+        <img
+          src={item.image || ""}
+          alt={item.title}
+          className="w-full h-[32rem] object-cover"
+        />
+        <div className="p-10">
+          <h1 className="text-3xl font-bold text-main_pink">{item.title}</h1>
+          <p className="text-base text-gray-500 mt-2">Sold by: {item.sellerName}</p>
+          <p className="text-2xl font-semibold text-coral mt-6">${item.price}</p>
+
+          <div className="mt-6">
+            <h2 className="text-xl font-semibold text-gray-800 mb-2">Description</h2>
+            <p className="text-gray-700 text-base">{item.description}</p>
+          </div>
+          <div className="flex">
             <button
-              className="mt-6 ml-8 bg-main_pink text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition"
-              onClick={() => setIsEditing(true)}
+              onClick={() => navigate('/marketplacepage')}
+              className="mt-8 bg-main_pink text-white px-6 py-3 rounded-xl hover:bg-pink-600 transition text-lg"
             >
-              Edit Listing
+              Back
             </button>
-          )}
-          {user && user.id === item.sellerID && (
-            <div
-              className="mt-6 ml-8 bg-main_pink text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition cursor-pointer flex items-center justify-center"
-              title="Delete Listing"  
-              onClick={async () => {
+            {user && user.id === item.sellerID && !isEditing && (
+              <button
+                className="mt-8 ml-8 bg-main_pink text-white px-6 py-3 rounded-xl hover:bg-pink-600 transition text-lg"
+                onClick={() => setIsEditing(true)}
+              >
+                Edit Listing
+              </button>
+            )}
+            {user && user.id === item.sellerID && (
+              <div
+                className="mt-8 ml-8 bg-main_pink text-white px-6 py-3 rounded-xl hover:bg-pink-600 transition cursor-pointer flex items-center justify-center"
+                title="Delete Listing"
+                onClick={async () => {
                   if (window.confirm('Are you sure you want to delete this item?')) {
                     try {
                       const response = await fetch(`http://localhost:8080/items/deleteitem/${item.id}`, {
@@ -110,59 +151,69 @@ function ItemPage() {
                     }
                   }
                 }}
-            >
-              <FontAwesomeIcon
-                icon={faTrashCan}
+              >
+                <FontAwesomeIcon icon={faTrashCan} />
+              </div>
+            )}
+            {/* Heart icon is always visible if user is logged in */}
+            {user && (
+              <div className="mt-8 ml-8 flex items-center">
+                <FontAwesomeIcon
+                  icon={isFavourite ? faHeart : faRegHeart}
+                  className="text-main_pink text-2xl cursor-pointer"
+                  onClick={() => setIsFavourite((prev) => !prev)}
+                  title={isFavourite ? "Remove from favourites" : "Add to favourites"}
+                />
+              </div>
+            )}
+          </div>
+          {isEditing && (
+            <form onSubmit={handleEditSubmit} className="mt-10 space-y-6">
+              <input
+                type="text"
+                name="title"
+                value={editItem.title}
+                onChange={handleEditChange}
+                className="w-full border rounded px-4 py-3 text-lg"
               />
-            </div>
+              <textarea
+                name="description"
+                value={editItem.description}
+                onChange={handleEditChange}
+                className="w-full border rounded px-4 py-3 text-lg"
+              />
+              <input
+                type="number"
+                name="price"
+                value={editItem.price}
+                onChange={handleEditChange}
+                className="w-full border rounded px-4 py-3 text-lg"
+              />
+              <input
+                type="text"
+                name="location"
+                value={editItem.location}
+                onChange={handleEditChange}
+                className="w-full border rounded px-4 py-3 text-lg"
+              />
+              <div className="flex space-x-6">
+                <button
+                  type="submit"
+                  className="bg-main_pink text-white px-6 py-3 rounded-xl hover:bg-pink-600 transition text-lg"
+                >
+                  Save
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsEditing(false)}
+                  className="bg-gray-300 text-gray-700 px-6 py-3 rounded-xl hover:bg-gray-400 transition text-lg"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
           )}
         </div>
-        {isEditing && (
-          <form onSubmit={handleEditSubmit} className="mt-8 space-y-4">
-            <input
-              type="text"
-              name="title"
-              value={editItem.title}
-              onChange={handleEditChange}
-              className="w-full border rounded px-3 py-2"
-            />
-            <textarea
-              name="description"
-              value={editItem.description}
-              onChange={handleEditChange}
-              className="w-full border rounded px-3 py-2"
-            />
-            <input
-              type="number"
-              name="price"
-              value={editItem.price}
-              onChange={handleEditChange}
-              className="w-full border rounded px-3 py-2"
-            />
-            <input
-              type="text"
-              name="location"
-              value={editItem.location}
-              onChange={handleEditChange}
-              className="w-full border rounded px-3 py-2"
-            />
-            <div className="flex space-x-4">
-              <button
-                type="submit"
-                className="bg-main_pink text-white px-4 py-2 rounded-xl hover:bg-pink-600 transition"
-              >
-                Save
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsEditing(false)}
-                className="bg-gray-300 text-gray-700 px-4 py-2 rounded-xl hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        )}
       </div>
     </div>
   );
