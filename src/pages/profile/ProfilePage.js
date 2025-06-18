@@ -10,6 +10,7 @@ function ProfilePage() {
   const { user } = useUser();
   const navigate = useNavigate();
   const [userPostings, setUserPostings] = useState([]);
+  const [userFavourites, setUserFavourites] = useState([]); 
 
   useEffect(() => {
     const fetchUsersPostings = async () => {
@@ -30,9 +31,41 @@ function ProfilePage() {
       }
     };
 
+    const fetchUserFavourites = async () => {
+      try {
+        const response = await fetch(`http://localhost:8080/favourites/getfavourites/${user.id}`);
+        if (response.ok) {
+          const favourites = await response.json();
+          const favouriteItems = favourites.map(fav => fav.itemId);
+
+          // fetch all items in parallel
+          const itemsData = await Promise.all(
+            favouriteItems
+              .filter(item => item !== null && item !== undefined)
+              .map(async (item) => {
+                const itemsResponse = await fetch(`http://localhost:8080/items/getitembyid/${item}`);
+                if (itemsResponse.ok) {
+                  return await itemsResponse.json();
+                }
+                return null;
+              })
+          );
+
+          // remove nulls 
+          setUserFavourites(itemsData);
+        }
+      } catch (error) {
+        console.error('Error fetching user favourites:', error);
+        setUserFavourites([]);
+      }
+    };
+
     if (user?.id) {
       fetchUsersPostings();
+      fetchUserFavourites();
     }
+    
+   
   }, [user?.id]);
 
   return (
@@ -42,6 +75,7 @@ function ProfilePage() {
         <h1 className="text-5xl mb-6 text-main_pink font-light">your profile</h1>
         <ProfileInfoCard/>
         <PostingSection title="Your Postings" items={userPostings} />
+        <PostingSection title="Your Favorites" items={userFavourites} />
       </div>
       <BottomTab />
     </div>
