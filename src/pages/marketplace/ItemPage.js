@@ -84,39 +84,42 @@ function ItemPage() {
     }
   };
 
-  const handleFavourite = () => {
+  const handleFavourite = async () => {
     if (user) {
       if (isFavourite) {
         try {
-          const response = fetch(`http://localhost:8080/favourites/remove/${user.id}/${item.id}`, {
+          const response = await fetch(`http://localhost:8080/favourites/remove/${user.id}/${item.id}`, {
             method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ itemId: item.id, userId: user.id }),
           });
-          setIsFavourite(false);
-          alert('Item removed from favourites.');
+          if (response.ok) {
+            setIsFavourite(false);
+            alert('Item removed from favourites.');
+          } else {
+            console.log('Failed to remove item from favourites:', response.statusText);
+          }
         } catch (error) {
           console.error('Error removing from favourites:', error);
           alert('An error occurred while removing the item from favourites. Please try again.');
         }
       } else {
         try {
-          const response = fetch(`http://localhost:8080/favourites/add`, {
+          const response = await fetch(`http://localhost:8080/favourites/add`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({ itemId: item.id, userId: user.id }),
           });
-          setIsFavourite(true);
-          alert('Item added to favourites.');
+          if (response.ok) {
+            setIsFavourite(true);
+            alert('Item added to favourites.');
+          } else {
+            alert('Failed to add item to favourites. Please try again.');
+          }
         } catch (error) {
           console.error('Error adding to favourites:', error);
           alert('An error occurred while adding the item to favourites. Please try again.');
         }
-        
       }
     }
   }
