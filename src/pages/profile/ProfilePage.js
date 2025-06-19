@@ -5,6 +5,7 @@ import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import ProfileInfoCard from '../../components/ProfileInfoCard';
 import PostingSection from '../../components/PostingSection';
+import GoogleMap from '../../components/GoogleMap';
 
 function ProfilePage() {
   const { user } = useUser();
@@ -76,6 +77,7 @@ function ProfilePage() {
         <ProfileInfoCard/>
         <PostingSection title="Your Postings" items={userPostings} />
         <PostingSection title="Your Favorites" items={userFavourites} />
+        <GoogleMap />
       </div>
       <BottomTab />
     </div>
