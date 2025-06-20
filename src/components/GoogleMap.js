@@ -1,19 +1,25 @@
 import React, { useEffect, useRef } from 'react';
 
-function GoogleMap() {
+function GoogleMap({ onLocationSelect }) {
   const mapRef = useRef(null);
 
   useEffect(() => {
     const initializeMap = () => {
       const map = new window.google.maps.Map(mapRef.current, {
-        center: { lat: 49.2606, lng: -123.2460 }, // Example: UBC
+        center: { lat: 49.2606, lng: -123.2460 },
         zoom: 14,
       });
 
-      new window.google.maps.Marker({
+      let marker = new window.google.maps.Marker({
         position: { lat: 49.2606, lng: -123.2460 },
         map,
-        title: "UBC",
+      });
+
+      map.addListener("click", (e) => {
+        const lat = e.latLng.lat();
+        const lng = e.latLng.lng();
+        marker.setPosition({ lat, lng });
+        onLocationSelect({ lat, lng }); // send coords back to parent
       });
     };
 
@@ -27,9 +33,8 @@ function GoogleMap() {
     } else {
       initializeMap();
     }
-  }, []);
+  }, [onLocationSelect]);
 
-  return <div ref={mapRef} style={{ width: '100%', height: '400px' }} />;
+  return <div ref={mapRef} style={{ width: '100%', height: '300px', marginTop: '1rem' }} />;
 }
-
 export default GoogleMap;

@@ -83,7 +83,7 @@ function LoginPage() {
         </form>
 
         <p className="mt-4 text-center text-sm text-gray-600">
-          Don’t have an account? <Link href='/signuppage' className="text-main_pink font-semibold cursor-pointer">Sign up</Link>
+          Don’t have an account? <Link to='/signuppage' className="text-main_pink font-semibold cursor-pointer">Sign up</Link>
         </p>
       </div>
     </div>

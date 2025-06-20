@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { lazy, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useUser } from "../../context/UserContext";
+import GoogleMap from '../../components/GoogleMap';
 
 function UserDetailsPage() {
     
@@ -20,6 +21,8 @@ function UserDetailsPage() {
         location: '',
         university: '',
         profilePic: null,
+        longitude: null,
+        latitude: null,
     });
 
     const handleChange = (e) => {
@@ -71,7 +74,16 @@ function UserDetailsPage() {
         } catch (error) {
             console.error('Error:', error);
         }
-};
+  };
+
+  const handleMapClick = ({ lat, lng }) => {
+    setDetails((prev) => ({
+      ...prev,
+      latitude: lat,
+      longitude: lng,
+    }));
+  };
+
 
 
 
@@ -152,18 +164,6 @@ function UserDetailsPage() {
           </div>
 
           <div>
-            <label className="block text-sm text-gray-700">Location</label>
-            <input
-              type="text"
-              name="location"
-              value={details.location}
-              onChange={handleChange}
-              placeholder="Enter your location"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-main_pink"
-            />
-          </div>
-
-          <div>
             <label className="block text-sm text-gray-700">University</label>
             <select
               name="university"
@@ -179,6 +179,24 @@ function UserDetailsPage() {
               <option value="Other">Other</option>
             </select>
           </div>
+
+          <div>
+            <label className="block text-sm text-gray-700">Location</label>
+            <input
+              type="text"
+              name="location"
+              value={details.location}
+              onChange={handleChange}
+              placeholder="Enter your location"
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-main_pink"
+            />
+          </div>
+            <GoogleMap onLocationSelect={handleMapClick}/>
+            {details.latitude && details.longitude && (
+              <div className="mt-2 text-sm text-gray-600">
+                Selected: {details.latitude.toFixed(5)}, {details.longitude.toFixed(5)}
+              </div>
+            )}
 
           <button
             type="submit"
