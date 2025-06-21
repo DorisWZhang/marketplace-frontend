@@ -12,6 +12,7 @@ function ProfilePage() {
   const navigate = useNavigate();
   const [userPostings, setUserPostings] = useState([]);
   const [userFavourites, setUserFavourites] = useState([]); 
+  const [details, setDetails] = useState({ ...user });
 
   useEffect(() => {
     const fetchUsersPostings = async () => {
@@ -66,8 +67,20 @@ function ProfilePage() {
       fetchUserFavourites();
     }
     
+    // fetch user details
+    if (user) {
+        setDetails({ ...user });
+    }
    
   }, [user?.id]);
+
+  const handleMapClick = ({ lat, lng }) => {
+    setDetails((prev) => ({
+      ...prev,
+      latitude: lat,
+      longitude: lng,
+    }));
+  };
 
   return (
     <div className="flex flex-col min-h-screen bg-cream transition-opacity duration-1000">
@@ -77,7 +90,15 @@ function ProfilePage() {
         <ProfileInfoCard/>
         <PostingSection title="Your Postings" items={userPostings} />
         <PostingSection title="Your Favorites" items={userFavourites} />
-        <GoogleMap />
+        
+        <GoogleMap
+          onLocationSelect={handleMapClick}
+          latitude={details.latitude}
+          longitude={details.longitude}
+        />
+
+
+
       </div>
       <BottomTab />
     </div>

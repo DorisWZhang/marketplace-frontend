@@ -52,9 +52,10 @@ function UserDetailsPage() {
             password,
         };
 
-        console.log(userPayload); // For now
-        
+        //console.log(userPayload); // For now
+        console.log(JSON.stringify(userPayload));
         try {
+
             const response = await fetch('http://localhost:8080/users/createuser', {
             method: 'POST',
             headers: {
