@@ -86,7 +86,7 @@ function ProfilePage() {
     <div className="flex flex-col min-h-screen bg-cream transition-opacity duration-1000">
       <div className="flex-grow flex flex-col items-center py-10 px-4">
         <img src={Logo} alt="Campus Cart Logo" className="w-24 mb-2" />
-        <h1 className="text-5xl mb-6 text-main_pink font-light">your profile</h1>
+        <h1 className="text-5xl mb-6 text-main_pink font-light">Your profile</h1>
         <ProfileInfoCard/>
         <PostingSection title="Your Postings" items={userPostings} />
         <PostingSection title="Your Favorites" items={userFavourites} />
