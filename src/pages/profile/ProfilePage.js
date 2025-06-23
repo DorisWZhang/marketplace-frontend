@@ -74,13 +74,7 @@ function ProfilePage() {
    
   }, [user?.id]);
 
-  const handleMapClick = ({ lat, lng }) => {
-    setDetails((prev) => ({
-      ...prev,
-      latitude: lat,
-      longitude: lng,
-    }));
-  };
+
 
   return (
     <div className="flex flex-col min-h-screen bg-cream transition-opacity duration-1000">
@@ -90,14 +84,6 @@ function ProfilePage() {
         <ProfileInfoCard/>
         <PostingSection title="Your Postings" items={userPostings} />
         <PostingSection title="Your Favorites" items={userFavourites} />
-        
-        <GoogleMap
-          onLocationSelect={handleMapClick}
-          latitude={details.latitude}
-          longitude={details.longitude}
-        />
-
-
 
       </div>
       <BottomTab />

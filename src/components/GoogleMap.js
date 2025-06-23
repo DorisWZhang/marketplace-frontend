@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-function GoogleMap({ onLocationSelect, latitude = null, longitude = null }) {
+function GoogleMap({ onLocationSelect, latitude = null, longitude = null, readOnly = false }) {
   const mapRef = useRef(null);
   const mapInstance = useRef(null);
   const markerRef = useRef(null);
@@ -28,22 +28,24 @@ function GoogleMap({ onLocationSelect, latitude = null, longitude = null }) {
       });
     }
 
-    // Add click listener
-    mapInstance.current.addListener('click', (e) => {
-      const lat = e.latLng.lat();
-      const lng = e.latLng.lng();
+    // Only add click listener if NOT readOnly
+    if (!readOnly) {
+      mapInstance.current.addListener('click', (e) => {
+        const lat = e.latLng.lat();
+        const lng = e.latLng.lng();
 
-      if (!markerRef.current) {
-        markerRef.current = new window.google.maps.Marker({
-          position: { lat, lng },
-          map: mapInstance.current,
-        });
-      } else {
-        markerRef.current.setPosition({ lat, lng });
-      }
+        if (!markerRef.current) {
+          markerRef.current = new window.google.maps.Marker({
+            position: { lat, lng },
+            map: mapInstance.current,
+          });
+        } else {
+          markerRef.current.setPosition({ lat, lng });
+        }
 
-      safeOnLocationSelect({ lat, lng });
-    });
+        safeOnLocationSelect({ lat, lng });
+      });
+    }
 
     setMapLoaded(true);
   };

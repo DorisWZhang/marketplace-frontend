@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useUser } from '../context/UserContext';
+import GoogleMap from './GoogleMap';
 
 export default function ProfileInfoCard() {
   const { user, setUser } = useUser();
 
   const [cardState, setCardState] = useState('view');
   const [details, setDetails] = useState({ ...user });
+  const [tempLatLng, setTempLatLng] = useState({
+    latitude: details.latitude,
+    longitude: details.longitude,
+  });
 
   const genders = {
     "female":'Female',
@@ -53,34 +58,44 @@ export default function ProfileInfoCard() {
             return;
         }
 
+        const updatedDetails = {
+          ...details,
+          latitude: tempLatLng.latitude,
+          longitude: tempLatLng.longitude,
+        };
+
         try {
             const response = await fetch(`http://localhost:8080/users/updateuser/${user.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(details),
+            body: JSON.stringify(updatedDetails),
             });
 
+            // After successful save
             if (response.ok) {
-            const savedUser = await response.json();
-            setUser(savedUser);
-            console.log('User updated:', savedUser);
-            // Optionally update your app state here with savedUser
+              const savedUser = await response.json();
+              setUser(savedUser);
+              setDetails(savedUser); 
+              setCardState('view');
             } else {
-            console.error('Failed to update user');
+              console.error('Failed to update user');
             }
         } catch (error) {
             console.error('Error:', error);
         }
-        console.log('Updated profile:', details);
-        setCardState('view');
+        console.log('Updated profile:', updatedDetails);
     };
 
 
   const handleCancel = () => {
     setDetails({ ...user });
     setCardState('view');
+  };
+
+  const handleMapClick = ({ lat, lng }) => {
+    setTempLatLng({ latitude: lat, longitude: lng });
   };
 
   if (cardState === 'edit') {
@@ -151,6 +166,11 @@ export default function ProfileInfoCard() {
             </div>
           </div>
 
+            <GoogleMap
+    onLocationSelect={handleMapClick}
+    latitude={tempLatLng.latitude}
+    longitude={tempLatLng.longitude}
+/>
           <div className="flex justify-between mt-6">
             <button
               type="submit"
@@ -194,6 +214,13 @@ export default function ProfileInfoCard() {
         <p><span className="font-medium text-main_pink">University:</span> {user.university}</p>
         <p><span className="font-medium text-main_pink">Location:</span> {user.location}</p>
       </div>
+      <GoogleMap
+          onLocationSelect={() => {}}
+          latitude={details.latitude}
+          longitude={details.longitude}
+          readOnly={true} // make map read only in view mode
+        />
+        
     </div>
   );
 }
