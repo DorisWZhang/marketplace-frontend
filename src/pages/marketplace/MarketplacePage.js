@@ -7,6 +7,7 @@ import { BsFileEarmarkPlus } from "react-icons/bs";
 import Modal from '../../components/Modal';
 import CreateListingPage from './CreateListingPage';
 import PostingSection from '../../components/PostingSection';
+import SearchSection from '../../components/SearchSection';
 
 function MarketplacePage() {
   const [items, setItems] = useState([]);
@@ -141,6 +142,7 @@ function MarketplacePage() {
       <div className="flex-grow overflow-y-auto px-4 py-10 flex flex-col items-center">
         <img src={Logo} alt="Campus Cart Logo" className="w-24 mb-2" />
         <h1 className="text-5xl mb-8 text-main_pink font-light">campus cart</h1>
+        <SearchSection />
 
         <PostingSection title="Near You" items={itemsNearYou} />
         <PostingSection title="Newly Posted" items={newlyPosted} />
