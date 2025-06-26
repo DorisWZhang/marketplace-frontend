@@ -14,6 +14,8 @@ function ItemPage() {
   const [isEditing, setIsEditing] = useState(false);
   const [editItem, setEditItem] = useState(location.state?.item || {});
   const [isFavourite, setIsFavourite] = useState(false);
+  const [sellerName, setSellerName] = useState('');
+
 
   // check if item is already favourited
   useEffect(() => {
@@ -33,8 +35,30 @@ function ItemPage() {
       }
     };
 
+
     checkFavourite();
+
+    
   }, [user, item.id]);
+
+  useEffect(() => {
+    async function fetchSeller() {
+      if (item.sellerID) {
+        try {
+          const response = await fetch(`http://localhost:8080/users/getuserbyid/${item.sellerID}`);
+          if (response.ok) {
+            const user = await response.json();
+            setSellerName(user.name);
+          } else {
+            setSellerName('Unknown');
+          }
+        } catch {
+          setSellerName('Unknown');
+        }
+      }
+    }
+    fetchSeller();
+  }, [item.sellerID]);
 
 
   if (!item) {
@@ -134,7 +158,7 @@ function ItemPage() {
         />
         <div className="p-10">
           <h1 className="text-3xl font-bold text-main_pink">{item.title}</h1>
-          <p className="text-base text-gray-500 mt-2">Sold by: {item.sellerName}</p>
+          <p className="text-base text-gray-500 mt-2">Sold by: {sellerName || 'Unknown'}</p>
           <p className="text-2xl font-semibold text-coral mt-6">${item.price}</p>
 
           <div className="mt-6">
