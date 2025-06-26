@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegHeart } from '@fortawesome/free-regular-svg-icons';
+import { BsChatDots } from "react-icons/bs";
 
 function ItemPage() {
   const navigate = useNavigate();
@@ -185,7 +186,7 @@ function ItemPage() {
                 className="mt-8 ml-8 bg-main_pink text-white px-6 py-3 rounded-xl hover:bg-pink-600 transition cursor-pointer flex items-center justify-center"
                 title="Delete Listing"
                 onClick={async () => {
-                  if (window.confirm('Are you sure you want to delete this item?')) {
+                  if (window.confirm('Are you sure you want to delete this listing?')) {
                     try {
                       const response = await fetch(`http://localhost:8080/items/deleteitem/${item.id}`, {
                         method: 'DELETE',
@@ -213,6 +214,7 @@ function ItemPage() {
                   onClick={() => handleFavourite()}
                   title={isFavourite ? "Remove from favourites" : "Add to favourites"}
                 />
+                <BsChatDots className="text-main_pink text-2xl cursor-pointer ml-12" title="Message Seller" />
               </div>
             )}
           </div>
