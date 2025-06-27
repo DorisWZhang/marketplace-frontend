@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from "../../context/UserContext";
+import GoogleMap from '../../components/GoogleMap';
 
 function CreateListingPage({ onClose }) {
-  
   const { user } = useUser();
   const [item, setItem] = useState({
     title: '',
@@ -15,11 +15,20 @@ function CreateListingPage({ onClose }) {
     views: 0,
     image: '',
     sold: false,
-    
+    latitude: user.latitude || null,
+    longitude: user.longitude || null,
   });
 
   const [imagePreview, setImagePreview] = useState(null);
-  const navigate = useNavigate();
+
+  // Set default location to user's location on mount
+  useEffect(() => {
+    setItem(prev => ({
+      ...prev,
+      latitude: user.latitude || null,
+      longitude: user.longitude || null,
+    }));
+  }, [user.latitude, user.longitude]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,32 +38,36 @@ function CreateListingPage({ onClose }) {
     }));
   };
 
-  const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  if (!file) {
-    setImagePreview(null);
-    setItem((prev) => ({ ...prev, image: null }));
-    return;
-  }
-
-  const reader = new FileReader();
-  reader.onloadend = () => {
-    setItem((prev) => ({
+  const handleMapClick = ({ lat, lng }) => {
+    setItem(prev => ({
       ...prev,
-      image: reader.result, // Base64 string
+      latitude: lat,
+      longitude: lng,
     }));
-    setImagePreview(reader.result);
   };
-  reader.readAsDataURL(file); // convert to base64
-};
 
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      setImagePreview(null);
+      setItem((prev) => ({ ...prev, image: null }));
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setItem((prev) => ({
+        ...prev,
+        image: reader.result, // Base64 string
+      }));
+      setImagePreview(reader.result);
+    };
+    reader.readAsDataURL(file); // convert to base64
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Don't include postedTime — backend will set it
     const { postedTime, ...itemToSend } = item;
-
     try {
       const response = await fetch('http://localhost:8080/items/createitem', {
         method: 'POST',
@@ -74,9 +87,8 @@ function CreateListingPage({ onClose }) {
     }
   };
 
-
   return (
-    <div className="max-w-lg mx-auto mt-10 bg-cream rounded-xl shadow-lg p-8 relative">
+    <div className="max-w-4xl mx-auto mt-2 bg-cream rounded-xl shadow-lg p-4 relative">
       <button
         onClick={onClose}
         className="absolute top-4 right-4 text-gray-400 hover:text-main_pink text-2xl"
@@ -85,71 +97,89 @@ function CreateListingPage({ onClose }) {
       >
         &times;
       </button>
-      <h2 className="text-2xl font-bold mb-6 text-main_pink">Create a Listing</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block mb-1 font-medium">Title</label>
-          <input
-            type="text"
-            name="title"
-            value={item.title}
-            onChange={handleChange}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
+      <h2 className="text-2xl font-bold mb-2 text-main_pink">Create a Listing</h2>
+      <form onSubmit={handleSubmit} className="flex flex-row gap-8">
+        <div className="flex-1 space-y-2">
+          <div>
+            <label className="block mb-1 font-medium">Title</label>
+            <input
+              type="text"
+              name="title"
+              value={item.title}
+              onChange={handleChange}
+              required
+              className="w-full border rounded px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-medium">Description</label>
+            <textarea
+              name="description"
+              value={item.description}
+              onChange={handleChange}
+              required
+              className="w-full border rounded px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-medium">Price</label>
+            <input
+              type="number"
+              name="price"
+              value={item.price}
+              onChange={handleChange}
+              required
+              min="0"
+              step="0.01"
+              className="w-full border rounded px-3 py-2"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 font-medium">Location</label>
+            <input
+              type="text"
+              name="location"
+              value={item.location}
+              onChange={handleChange}
+              required
+              className="w-full border rounded px-3 py-2"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-main_pink text-white py-2 rounded-xl font-semibold hover:bg-pink-600 transition mt-4"
+          >
+            Create Listing
+          </button>
         </div>
-        <div>
-          <label className="block mb-1 font-medium">Description</label>
-          <textarea
-            name="description"
-            value={item.description}
-            onChange={handleChange}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
+        {/* Right column: map and image */}
+        <div className="flex-1 flex flex-col gap-4">
+          <div>
+            <label className="block mb-1 font-medium">Select Item Location on Map</label>
+            <GoogleMap
+              onLocationSelect={handleMapClick}
+              latitude={item.latitude}
+              longitude={item.longitude}
+            />
+            {item.latitude && item.longitude && (
+              <div className="mt-2 text-sm text-gray-600">
+                Selected: {item.latitude.toFixed(5)}, {item.longitude.toFixed(5)}
+              </div>
+            )}
+          </div>
+          <div>
+            <label className="block mb-1 font-medium">Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full"
+            />
+            {imagePreview && (
+              <img src={imagePreview} alt="Preview" className="mt-2 h-32 object-cover rounded" />
+            )}
+          </div>
         </div>
-        <div>
-          <label className="block mb-1 font-medium">Price</label>
-          <input
-            type="number"
-            name="price"
-            value={item.price}
-            onChange={handleChange}
-            required
-            min="0"
-            step="0.01"
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium">Location</label>
-          <input
-            type="text"
-            name="location"
-            value={item.location}
-            onChange={handleChange}
-            required
-            className="w-full border rounded px-3 py-2"
-          />
-        </div>
-        <div>
-          <label className="block mb-1 font-medium">Image</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full"
-          />
-          {imagePreview && (
-            <img src={imagePreview} alt="Preview" className="mt-2 h-32 object-cover rounded" />
-          )}
-        </div>
-        <button
-          type="submit"
-          className="w-full bg-main_pink text-white py-2 rounded-xl font-semibold hover:bg-pink-600 transition"
-        >
-          Create Listing
-        </button>
       </form>
     </div>
   );

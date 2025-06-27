@@ -6,6 +6,7 @@ import { faTrashCan } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegHeart } from '@fortawesome/free-regular-svg-icons';
 import { BsChatDots } from "react-icons/bs";
+import GoogleMap from '../../components/GoogleMap';
 
 function ItemPage() {
   const navigate = useNavigate();
@@ -166,6 +167,20 @@ function ItemPage() {
             <h2 className="text-xl font-semibold text-gray-800 mb-2">Description</h2>
             <p className="text-gray-700 text-base">{item.description}</p>
           </div>
+          {item.latitude && item.longitude && (
+            <div className="mt-6">
+              <h2 className="text-xl font-semibold text-gray-800 mb-2">Item Location</h2>
+              <GoogleMap
+                latitude={item.latitude}
+                longitude={item.longitude}
+                readOnly={true}
+                onLocationSelect={() => {}}
+              />
+              <div className="mt-2 text-sm text-gray-600">
+                {item.latitude.toFixed(5)}, {item.longitude.toFixed(5)}
+              </div>
+            </div>
+          )}
           <div className="flex">
             <button
               onClick={() => navigate('/marketplacepage')}
@@ -247,6 +262,25 @@ function ItemPage() {
                 onChange={handleEditChange}
                 className="w-full border rounded px-4 py-3 text-lg"
               />
+              <div>
+                <label className="block mb-1 font-medium">Edit Item Location on Map</label>
+                <GoogleMap
+                  latitude={editItem.latitude}
+                  longitude={editItem.longitude}
+                  onLocationSelect={({ lat, lng }) =>
+                    setEditItem(prev => ({
+                      ...prev,
+                      latitude: lat,
+                      longitude: lng,
+                    }))
+                  }
+                />
+                {editItem.latitude && editItem.longitude && (
+                  <div className="mt-2 text-sm text-gray-600">
+                    Selected: {editItem.latitude.toFixed(5)}, {editItem.longitude.toFixed(5)}
+                  </div>
+                )}
+              </div>
               <div className="flex space-x-6">
                 <button
                   type="submit"
