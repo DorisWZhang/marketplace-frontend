@@ -8,12 +8,14 @@ import Modal from '../../components/Modal';
 import CreateListingPage from './CreateListingPage';
 import PostingSection from '../../components/PostingSection';
 import SearchSection from '../../components/SearchSection';
+import ConversationsList from '../../components/ConversationsList';
 
 function MarketplacePage() {
   const [items, setItems] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const userLocation = 'UBC';
   const navigate = useNavigate();
+  const [showConversations, setShowConversations] = useState(false);
 
   useEffect(() => {
   const mockItems = [
@@ -158,9 +160,24 @@ function MarketplacePage() {
         <BsFileEarmarkPlus/>
       </button>
 
+      {/* Floating circular "💬" button for conversations */}
+      <button
+        className="fixed right-8 top-8 z-50 bg-main_pink text-white rounded-full w-16 h-16 flex items-center justify-center text-2xl shadow-lg hover:bg-pink-600 transition"
+        aria-label="Open Conversations"
+        onClick={() => setShowConversations(true)}
+      >
+        💬
+      </button>
+
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
           <CreateListingPage onClose={() => setShowModal(false)} />
+        </Modal>
+      )}
+
+      {showConversations && (
+        <Modal onClose={() => setShowConversations(false)}>
+          <ConversationsList />
         </Modal>
       )}
 
