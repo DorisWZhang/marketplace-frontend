@@ -7,6 +7,8 @@ import { faHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as faRegHeart } from '@fortawesome/free-regular-svg-icons';
 import { BsChatDots } from "react-icons/bs";
 import GoogleMap from '../../components/GoogleMap';
+import ConversationPage from '../../components/ConversationPage';
+import Modal from '../../components/Modal';
 
 function ItemPage() {
   const navigate = useNavigate();
@@ -17,6 +19,7 @@ function ItemPage() {
   const [editItem, setEditItem] = useState(location.state?.item || {});
   const [isFavourite, setIsFavourite] = useState(false);
   const [sellerName, setSellerName] = useState('');
+  const [showConversation, setShowConversation] = useState(false);
 
 
   // check if item is already favourited
@@ -229,7 +232,15 @@ function ItemPage() {
                   onClick={() => handleFavourite()}
                   title={isFavourite ? "Remove from favourites" : "Add to favourites"}
                 />
-                <BsChatDots className="text-main_pink text-2xl cursor-pointer ml-12" title="Message Seller" />
+                <BsChatDots
+                  className="text-main_pink text-2xl cursor-pointer ml-12"
+                  title="Message Seller"
+                  onClick={() => {
+                    if (user.id !== item.sellerID) {
+                      setShowConversation(true);
+                    }
+                  }}
+                />
               </div>
             )}
           </div>
@@ -297,6 +308,11 @@ function ItemPage() {
                 </button>
               </div>
             </form>
+          )}
+          {showConversation && (
+            <Modal onClose={() => setShowConversation(false)}>
+              <ConversationPage otherUserId={item.sellerID} />
+            </Modal>
           )}
         </div>
       </div>
