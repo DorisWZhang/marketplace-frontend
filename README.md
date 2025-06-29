@@ -4,3 +4,5 @@ Campus Cart is a student-focused eCommerce platform that makes it easy for stude
 Checkout the backend repo here: https://github.com/DorisWZhang/marketplace-backend
 
 ![image](https://github.com/user-attachments/assets/c0acc724-eda3-4f99-95fb-088b98fdb0bd)
+
+![image](https://github.com/user-attachments/assets/ed4e46ee-f361-43d9-9e3a-f3d1ccf3553b)
