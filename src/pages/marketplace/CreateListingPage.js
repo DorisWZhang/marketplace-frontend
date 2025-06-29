@@ -46,24 +46,42 @@ function CreateListingPage({ onClose }) {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      setImagePreview(null);
-      setItem((prev) => ({ ...prev, image: null }));
-      return;
-    }
+  const handleImageChange = async (e) => {
+  const file = e.target.files[0];
+  if (!file) {
+    setImagePreview(null);
+    setItem((prev) => ({ ...prev, image: '' }));
+    return;
+  }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
+  setImagePreview(URL.createObjectURL(file)); // temporary preview
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+
+  try {
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    const data = await response.json();
+    if (data.secure_url) {
       setItem((prev) => ({
         ...prev,
-        image: reader.result, // Base64 string
+        image: data.secure_url, // url to save in db
       }));
-      setImagePreview(reader.result);
-    };
-    reader.readAsDataURL(file); // convert to base64
-  };
+    } else {
+      alert("Image upload failed..");
+      console.error(data);
+    }
+  } catch (err) {
+    alert("Image upload failed.");
+    console.error("Cloudinary upload error:", err);
+  }
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

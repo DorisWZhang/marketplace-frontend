@@ -131,7 +131,21 @@ function MarketplacePage() {
     }
   ];
 
-  setItems(mockItems);
+  const fetchItems = async () => {
+    try {
+      const response = await fetch('http://localhost:8080/items/getitems');
+      if (response.ok) {  
+        const data = await response.json();
+        setItems(data);
+      } else {
+        console.error('Failed to fetch items');
+      }
+    } catch (error) {}
+      console.error('Error fetching items:');
+    }
+
+    fetchItems();
+  //setItems(mockItems);
 }, []);
 
 
