@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useUser } from '../context/UserContext'
+import ConversationPage from './ConversationPage';
+import Modal from './Modal'; // Make sure you have this import
+
 
 function ConversationsList() {
     const { user } = useUser();
     const [conversations, setConversations] = useState([]);
     const [userNames, setUserNames] = useState({}); // { userId: name }
+    const [openConversation, setOpenConversation] = useState(null);
 
     // fetch user name by ID and cache it
     const fetchUserName = async (userId) => {
@@ -61,7 +65,11 @@ function ConversationsList() {
                         const otherUserId = msg.senderId === user.id ? msg.receiverId : msg.senderId;
                         const otherUserName = userNames[otherUserId] || "Loading...";
                         return (
-                            <div key={msg.id || idx} className="p-4 hover:bg-gray-100 cursor-pointer">
+                            <div
+                                key={msg.id || idx}
+                                className="p-4 hover:bg-gray-100 cursor-pointer"
+                                onClick={() => setOpenConversation(otherUserId)}
+                            >
                                 <div className="font-medium">{otherUserName}</div>
                                 <div className="text-sm text-gray-600 truncate">{msg.text || ''}</div>
                             </div>
@@ -69,6 +77,11 @@ function ConversationsList() {
                     })
                 )}
             </div>
+            {openConversation && (
+                <Modal onClose={() => setOpenConversation(null)}>
+                    <ConversationPage otherUserId={openConversation} />
+                </Modal>
+            )}
         </div>
     );
 }

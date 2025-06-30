@@ -172,7 +172,7 @@ function MarketplacePage() {
 
   const itemsNearYou = items.filter((item) => isWithinDistance(item.longitude, item.latitude, user.longitude, user.latitude));
   const newlyPosted = [...items].sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt));
-  const popularItems = items.filter((item) => item.views > 50);
+  const popularItems = items.filter((item) => item.views > 10);
 
   
   return (

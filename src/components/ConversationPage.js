@@ -7,6 +7,7 @@ function ConversationPage({ otherUserId }) {
     const [conversation, setConversation] = useState([]);
     const [message, setMessage] = useState('');
     const [sending, setSending] = useState(false);
+    const [otherUserName, setOtherUserName] = useState('');
 
     useEffect(() => {
         const fetchConversation = async () => {
@@ -22,8 +23,27 @@ function ConversationPage({ otherUserId }) {
                 console.error('Error fetching conversation:', error);
             }
         };
+        
+        const fetchOtherUserName = async () => {
+            if (!otherUserId) return;
+            try {
+                const response = await fetch(`http://localhost:8080/users/getuserbyid/${otherUserId}`);
+                if (response.ok) {  
+                    const data = await response.json();
+                    setOtherUserName(data.name || data.username || "Unknown User");
+                } else {
+                    setOtherUserName("Unknown User");
+                    console.error('Failed to fetch other user name');
+                }
+            } catch (error) {
+                setOtherUserName("Unknown User");
+                console.error('Error fetching other user name:', error);
+            }
+        };
+
 
         fetchConversation();
+        fetchOtherUserName();
     }, [user, otherUserId]);
 
     const handleSend = async (e) => {
@@ -54,7 +74,7 @@ function ConversationPage({ otherUserId }) {
 
     return (
         <div className="max-w-2xl mx-auto mt-8 bg-white rounded-xl shadow-lg p-6 flex flex-col">
-            <h2 className="text-xl font-bold mb-4 text-main_pink">Conversation</h2>
+            <h2 className="text-xl font-bold mb-4 text-main_pink">{otherUserName}</h2>
             <div className="flex-1 flex flex-col gap-2 mb-4 overflow-y-auto max-h-96">
                 {conversation.length === 0 ? (
                     <div className="text-gray-500 text-center">No messages yet.</div>
