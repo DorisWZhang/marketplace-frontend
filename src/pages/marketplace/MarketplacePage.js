@@ -9,6 +9,7 @@ import CreateListingPage from './CreateListingPage';
 import PostingSection from '../../components/PostingSection';
 import SearchSection from '../../components/SearchSection';
 import ConversationsList from '../../components/ConversationsList';
+import { useUser } from '../../context/UserContext';
 
 function MarketplacePage() {
   const [items, setItems] = useState([]);
@@ -16,6 +17,8 @@ function MarketplacePage() {
   const userLocation = 'UBC';
   const navigate = useNavigate();
   const [showConversations, setShowConversations] = useState(false);
+  const { user } = useUser();
+
 
   useEffect(() => {
   const mockItems = [
@@ -148,11 +151,30 @@ function MarketplacePage() {
   //setItems(mockItems);
 }, []);
 
+  // returns true if location1 is within 2km of location2
+  const isWithinDistance = (long1, lat1, long2, lat2, maxDistanceMeters = 2000) => {
+  if (
+    typeof window === 'undefined' ||
+    !window.google ||
+    !window.google.maps ||
+    !window.google.maps.geometry
+  ) {
+    console.warn("Google Maps is not loaded yet");
+    return false;
+  }
 
-  const itemsNearYou = items.filter((item) => item.location === userLocation);
+  const point1 = new window.google.maps.LatLng(lat1, long1);
+  const point2 = new window.google.maps.LatLng(lat2, long2);
+  const distance = window.google.maps.geometry.spherical.computeDistanceBetween(point1, point2);
+  return distance <= maxDistanceMeters;
+};
+
+
+  const itemsNearYou = items.filter((item) => isWithinDistance(item.longitude, item.latitude, user.longitude, user.latitude));
   const newlyPosted = [...items].sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt));
   const popularItems = items.filter((item) => item.views > 50);
 
+  
   return (
     <div className="flex flex-col h-screen bg-cream">
       <div className="flex-grow overflow-y-auto px-4 py-10 flex flex-col items-center">
