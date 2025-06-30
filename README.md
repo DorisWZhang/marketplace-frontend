@@ -8,7 +8,7 @@ The frontend is developed using <strong>React and JavaScript</strong>, and the b
 
 <br></br>
 
-![image](https://github.com/user-attachments/assets/c0acc724-eda3-4f99-95fb-088b98fdb0bd)
+![image](https://github.com/user-attachments/assets/4a605baa-2c22-4335-81dd-ed2032b6f569)
 
 <img src="https://github.com/user-attachments/assets/ed4e46ee-f361-43d9-9e3a-f3d1ccf3553b" width="500" />
 
