@@ -20,6 +20,7 @@ function ItemPage() {
   const [isFavourite, setIsFavourite] = useState(false);
   const [sellerName, setSellerName] = useState('');
   const [showConversation, setShowConversation] = useState(false);
+  const [imagePreview, setImagePreview] = useState(editItem.image || '');
 
 
   // check if item is already favourited
@@ -87,6 +88,32 @@ function ItemPage() {
       ...prev,
       [name]: value,
     }));
+  };
+
+  const handleImageChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setImagePreview(URL.createObjectURL(file));
+
+    // upload to Cloudinary
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: 'POST', body: formData }
+      );
+      const data = await res.json();
+      if (data.secure_url) {
+        setEditItem(prev => ({ ...prev, image: data.secure_url }));
+      } else {
+        alert("Image upload failed.");
+      }
+    } catch (err) {
+      alert("Image upload failed.");
+    }
   };
 
   const handleEditSubmit = async (e) => {
@@ -273,6 +300,7 @@ function ItemPage() {
                 onChange={handleEditChange}
                 className="w-full border rounded px-4 py-3 text-lg"
               />
+              
               <div>
                 <label className="block mb-1 font-medium">Edit Item Location on Map</label>
                 <GoogleMap
@@ -292,6 +320,15 @@ function ItemPage() {
                   </div>
                 )}
               </div>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="w-full"
+              />
+              {imagePreview && (
+                <img src={imagePreview} alt="Preview" className="mt-2 h-32 object-cover rounded" />
+              )}
               <div className="flex space-x-6">
                 <button
                   type="submit"

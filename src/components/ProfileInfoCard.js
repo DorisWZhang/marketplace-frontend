@@ -12,6 +12,8 @@ export default function ProfileInfoCard() {
     longitude: details.longitude,
   });
 
+  const [imagePreview, setImagePreview] = useState(null);
+
   const genders = {
     "female":'Female',
     'male':'Male',
@@ -33,7 +35,7 @@ export default function ProfileInfoCard() {
     const { name, value } = e.target;
     setDetails((prev) => ({ ...prev, [name]: value }));
   };
-
+  
   // only set details once User data is available (fix async user load)
   useEffect(() => {
     if (user) {
@@ -41,11 +43,28 @@ export default function ProfileInfoCard() {
     }
     }, [user]);
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      const imageUrl = URL.createObjectURL(file);
-      setDetails((prev) => ({ ...prev, profilePic: imageUrl }));
+    if (!file) return;
+    setImagePreview(URL.createObjectURL(file));
+    // upload to Cloudinary
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', process.env.REACT_APP_CLOUDINARY_UPLOAD_PRESET);
+
+    try {
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: 'POST', body: formData }
+      );
+      const data = await res.json();
+      if (data.secure_url) {
+        setDetails(prev => ({ ...prev, profilePic: data.secure_url }));
+      } else {
+        alert("Image upload failed.");
+      }
+    } catch (err) {
+      alert("Image upload failed.");
     }
   };
 

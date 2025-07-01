@@ -49,11 +49,10 @@ function ConversationsList() {
 
     useEffect(() => {
         fetchConversations();
-        // eslint-disable-next-line
     }, [user]);
 
     return (
-        <div className="max-w-md mx-auto mt-8 bg-white rounded-xl shadow-lg overflow-hidden">
+        <div className="w-[800px] mx-auto mt-8 bg-white rounded-xl shadow-lg overflow-hidden">
             <div className="bg-main_pink text-white px-6 py-4 text-xl font-semibold">
                 Conversations
             </div>
