@@ -4,7 +4,7 @@
 Checkout the backend repo here: https://github.com/DorisWZhang/marketplace-backend
 
 <h3> Technologies </h3>
-The frontend is developed using <strong>React and JavaScript</strong>, and the backend is powered by <strong>Java with Spring Boot</strong>, integrated with a <strong>PostgreSQL</strong> database for data management. Other tools used are the <strong>Google Maps API</strong> for location-based features and <strong>Cloudinary API</strong> for image uploads and optimization.
+The frontend is developed using <strong>React and JavaScript</strong>, and the backend is powered by <strong>Java with Spring Boot</strong>, integrated with a <strong>PostgreSQL</strong> database for data management. Other tools used are the <strong>Google Maps API</strong> for location-based features and <strong>Cloudinary API</strong> for image uploads.
 
 <br></br>
 
