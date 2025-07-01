@@ -12,6 +12,8 @@ The frontend is developed using <strong>React and JavaScript</strong>, and the b
 
 <img src="https://github.com/user-attachments/assets/ed4e46ee-f361-43d9-9e3a-f3d1ccf3553b" width="500" />
 
+![image](https://github.com/user-attachments/assets/b2058dca-54c2-4030-81d7-6b35715d1d48)
+
 ![image](https://github.com/user-attachments/assets/83654734-1e91-44b4-b33a-71aa33dbce25)
 
 
