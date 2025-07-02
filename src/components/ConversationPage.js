@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { useUser } from '../context/UserContext'
+import React, { useEffect, useState, useRef } from 'react';
+import { useUser } from '../context/UserContext';
+import SockJS from 'sockjs-client';
+import { Client } from '@stomp/stompjs';
 
+
+const SOCKET_URL = "http://localhost:8080/ws";
 
 function ConversationPage({ otherUserId }) {
     const { user } = useUser();
@@ -8,68 +12,124 @@ function ConversationPage({ otherUserId }) {
     const [message, setMessage] = useState('');
     const [sending, setSending] = useState(false);
     const [otherUserName, setOtherUserName] = useState('');
+    const stompClient = useRef(null);
 
+    // fetch conversation and other user's name
     useEffect(() => {
+        if (!user || !otherUserId) return;
+
         const fetchConversation = async () => {
-            if (!user || !otherUserId) return;
             try {
-                const response = await fetch(`http://localhost:8080/messages/conversation/${user.id}/${otherUserId}`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch conversation');
+                const res = await fetch(`http://localhost:8080/messages/conversation/${user.id}/${otherUserId}`);
+                if (res.ok) {
+                    setConversation(await res.json());
                 }
-                const data = await response.json();
-                setConversation(data);
-            } catch (error) {
-                console.error('Error fetching conversation:', error);
+            } catch (err) {
+                setConversation([]);
             }
         };
-        
+
         const fetchOtherUserName = async () => {
-            if (!otherUserId) return;
             try {
-                const response = await fetch(`http://localhost:8080/users/getuserbyid/${otherUserId}`);
-                if (response.ok) {  
-                    const data = await response.json();
+                const res = await fetch(`http://localhost:8080/users/getuserbyid/${otherUserId}`);
+                if (res.ok) {
+                    const data = await res.json();
                     setOtherUserName(data.name || data.username || "Unknown User");
                 } else {
                     setOtherUserName("Unknown User");
-                    console.error('Failed to fetch other user name');
                 }
-            } catch (error) {
+            } catch {
                 setOtherUserName("Unknown User");
-                console.error('Error fetching other user name:', error);
             }
         };
-
 
         fetchConversation();
         fetchOtherUserName();
     }, [user, otherUserId]);
 
+    // WebSocket setup
+    useEffect(() => {
+        if (!user || !otherUserId) return;
+
+        stompClient.current = new Client({
+            webSocketFactory: () => new SockJS(SOCKET_URL),
+            reconnectDelay: 5000,
+            onConnect: () => {
+                console.log("WebSocket connected!");
+                stompClient.current.subscribe(`/topic/messages/${user.id}`, (msg) => {
+                    console.log("Message received:", msg.body);
+                });
+            },
+            onWebSocketError: (error) => {
+                console.error("WebSocket error:", error);
+            },
+            onStompError: (frame) => {
+                console.error('STOMP broker error:', frame);
+            }
+        });
+
+
+        stompClient.current.activate(); // ✅ this replaces .connect()
+
+        return () => {
+            if (stompClient.current && stompClient.current.active) {
+                stompClient.current.deactivate();
+            }
+        };
+    }, [user, otherUserId]);
+
+
+    // Send message
     const handleSend = async (e) => {
         e.preventDefault();
         if (!message.trim()) return;
         setSending(true);
+
+        const newMessage = {
+            senderId: user.id,
+            receiverId: otherUserId,
+            text: message,
+            timestamp: new Date().toISOString()  
+        };
+
+        // add message immediately to conversation UI
+        setConversation(prev => [...prev, newMessage]);
+
         try {
+            // Save to DB
             const res = await fetch('http://localhost:8080/messages/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    senderId: user.id,
-                    receiverId: otherUserId,
-                    text: message
-                })
+                body: JSON.stringify(newMessage)
             });
-            if (res.ok) {
-                setMessage('');
-                // refresh conversation after sending
-                const updated = await fetch(`http://localhost:8080/messages/conversation/${user.id}/${otherUserId}`);
-                setConversation(await updated.json());
+
+            if (!res.ok) throw new Error('Failed to save message');
+
+            const savedMessage = await res.json();
+
+            console.log('Message saved:', savedMessage);
+
+            if (stompClient.current && stompClient.current.connected) {
+                stompClient.current.publish({
+                    destination: "/app/chat.sendMessage",
+                    body: JSON.stringify(savedMessage)
+                });
             }
-        } catch (err) {
+
+            setConversation(prev => {
+                const filtered = prev.filter(msg => msg.timestamp !== newMessage.timestamp);
+                return [...filtered, savedMessage];
+            });
+
+            setMessage('');
+        } catch (error) {
+            console.error(error);
             alert('Failed to send message.');
+            // remove c message if send fails:
+            setConversation(prev => prev.filter(msg => msg.timestamp !== newMessage.timestamp));
+        } finally {
+            setSending(false);
         }
-        setSending(false);
     };
 
     return (
@@ -117,4 +177,4 @@ function ConversationPage({ otherUserId }) {
     );
 }
 
-export default ConversationPage
+export default ConversationPage;
