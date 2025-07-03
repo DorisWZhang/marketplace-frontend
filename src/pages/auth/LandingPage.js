@@ -14,8 +14,6 @@ function LandingPage() {
     const navTimer = setTimeout(() => {
       navigate('/transitionpage');
     }, 3000);
-    console.log("GOOGLE MAPS:", process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
-    console.log("GOOGLE MAPS:", process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
 
 
     return () => {
