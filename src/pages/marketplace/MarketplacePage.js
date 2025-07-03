@@ -136,7 +136,7 @@ function MarketplacePage() {
 
   const fetchItems = async () => {
     try {
-      const response = await fetch('http://localhost:8080/items/getitems');
+      const response = await fetch('https://marketplace-backend-production-7420.up.railway.app/items/getitems');
       if (response.ok) {  
         const data = await response.json();
         setItems(data);

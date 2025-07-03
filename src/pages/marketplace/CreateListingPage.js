@@ -87,7 +87,7 @@ function CreateListingPage({ onClose }) {
     e.preventDefault();
     const { postedTime, ...itemToSend } = item;
     try {
-      const response = await fetch('http://localhost:8080/items/createitem', {
+      const response = await fetch('https://marketplace-backend-production-7420.up.railway.app/items/createitem', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

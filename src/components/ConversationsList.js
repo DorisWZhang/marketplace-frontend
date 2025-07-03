@@ -14,7 +14,7 @@ function ConversationsList() {
     const fetchUserName = async (userId) => {
         if (!userId || userNames[userId]) return;
         try {
-            const res = await fetch(`http://localhost:8080/users/getuserbyid/${userId}`);
+            const res = await fetch(`https://marketplace-backend-production-7420.up.railway.app/users/getuserbyid/${userId}`);
             if (res.ok) {
                 const data = await res.json();
                 setUserNames(prev => ({ ...prev, [userId]: data.name || data.username || "User" }));
@@ -30,7 +30,7 @@ function ConversationsList() {
             return;
         }
         try {
-            const response = await fetch(`http://localhost:8080/messages/getLatestConversations/${user.id}`);
+            const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/messages/getLatestConversations/${user.id}`);
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }

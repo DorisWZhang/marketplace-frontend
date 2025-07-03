@@ -8,7 +8,7 @@ function ItemCard({ item }) {
   useEffect(() => {
     async function fetchSeller() {
       try {
-        const response = await fetch(`http://localhost:8080/users/getuserbyid/${item.sellerID}`);
+        const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/users/getuserbyid/${item.sellerID}`);
         if (response.ok) {
           const user = await response.json();
           setSellerName(user.name);
