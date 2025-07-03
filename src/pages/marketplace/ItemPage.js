@@ -28,7 +28,7 @@ function ItemPage() {
     const checkFavourite = async () => {
       if (user && item.id) {
         try {
-          const response = await fetch(`http://localhost:8080/favourites/check/${user.id}/${item.id}`);
+          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/check/${user.id}/${item.id}`);
           if (response.ok) {
             const isFav = await response.json(); // expecting a boolean true/false
             setIsFavourite(isFav);
@@ -51,7 +51,7 @@ function ItemPage() {
     async function fetchSeller() {
       if (item.sellerID) {
         try {
-          const response = await fetch(`http://localhost:8080/users/getuserbyid/${item.sellerID}`);
+          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/users/getuserbyid/${item.sellerID}`);
           if (response.ok) {
             const user = await response.json();
             setSellerName(user.name);
@@ -119,7 +119,7 @@ function ItemPage() {
   const handleEditSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8080/items/updateitem/${editItem.id}`, {
+      const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/items/updateitem/${editItem.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -144,7 +144,7 @@ function ItemPage() {
     if (user) {
       if (isFavourite) {
         try {
-          const response = await fetch(`http://localhost:8080/favourites/remove/${user.id}/${item.id}`, {
+          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/remove/${user.id}/${item.id}`, {
             method: 'DELETE',
           });
           if (response.ok) {
@@ -159,7 +159,7 @@ function ItemPage() {
         }
       } else {
         try {
-          const response = await fetch(`http://localhost:8080/favourites/add`, {
+          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/add`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -233,7 +233,7 @@ function ItemPage() {
                 onClick={async () => {
                   if (window.confirm('Are you sure you want to delete this listing?')) {
                     try {
-                      const response = await fetch(`http://localhost:8080/items/deleteitem/${item.id}`, {
+                      const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/items/deleteitem/${item.id}`, {
                         method: 'DELETE',
                       });
                       if (response.ok) {

@@ -12,7 +12,7 @@ function SearchSection({ setItems }) {
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`http://localhost:8080/items/getitembytitle/${searchQuery}`);
+      const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/items/getitembytitle/${searchQuery}`);
       if (response.ok) {
         const items = await response.json();
         setItems(items);

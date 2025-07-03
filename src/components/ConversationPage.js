@@ -4,7 +4,7 @@ import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 
 
-const SOCKET_URL = "http://localhost:8080/ws";
+const SOCKET_URL = "wss://marketplace-backend-production-7420.up.railway.app/ws";
 
 function ConversationPage({ otherUserId }) {
     const { user } = useUser();
@@ -20,7 +20,7 @@ function ConversationPage({ otherUserId }) {
 
         const fetchConversation = async () => {
             try {
-                const res = await fetch(`http://localhost:8080/messages/conversation/${user.id}/${otherUserId}`);
+                const res = await fetch(`https://marketplace-backend-production-7420.up.railway.app/messages/conversation/${user.id}/${otherUserId}`);
                 if (res.ok) {
                     setConversation(await res.json());
                 }
@@ -31,7 +31,7 @@ function ConversationPage({ otherUserId }) {
 
         const fetchOtherUserName = async () => {
             try {
-                const res = await fetch(`http://localhost:8080/users/getuserbyid/${otherUserId}`);
+                const res = await fetch(`https://marketplace-backend-production-7420.up.railway.app/users/getuserbyid/${otherUserId}`);
                 if (res.ok) {
                     const data = await res.json();
                     setOtherUserName(data.name || data.username || "Unknown User");
@@ -97,7 +97,7 @@ function ConversationPage({ otherUserId }) {
 
         try {
             // Save to DB
-            const res = await fetch('http://localhost:8080/messages/send', {
+            const res = await fetch('https://marketplace-backend-production-7420.up.railway.app/messages/send', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newMessage)

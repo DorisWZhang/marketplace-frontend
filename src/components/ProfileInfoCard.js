@@ -84,7 +84,7 @@ export default function ProfileInfoCard() {
         };
 
         try {
-            const response = await fetch(`http://localhost:8080/users/updateuser/${user.id}`, {
+            const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/users/updateuser/${user.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',

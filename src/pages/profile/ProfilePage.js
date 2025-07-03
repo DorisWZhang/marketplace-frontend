@@ -17,7 +17,7 @@ function ProfilePage() {
   useEffect(() => {
     const fetchUsersPostings = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/items/getitemsbyseller/${user.id}`);
+        const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/items/getitemsbyseller/${user.id}`);
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -35,7 +35,7 @@ function ProfilePage() {
 
     const fetchUserFavourites = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/favourites/getfavourites/${user.id}`);
+        const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/getfavourites/${user.id}`);
         if (response.ok) {
           const favourites = await response.json();
           const favouriteItems = favourites.map(fav => fav.itemId);
@@ -45,7 +45,7 @@ function ProfilePage() {
             favouriteItems
               .filter(item => item !== null && item !== undefined)
               .map(async (item) => {
-                const itemsResponse = await fetch(`http://localhost:8080/items/getitembyid/${item}`);
+                const itemsResponse = await fetch(`https://marketplace-backend-production-7420.up.railway.app/items/getitembyid/${item}`);
                 if (itemsResponse.ok) {
                   return await itemsResponse.json();
                 }

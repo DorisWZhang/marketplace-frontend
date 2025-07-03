@@ -17,7 +17,7 @@ function LoginPage() {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:8080/users/login', {
+      const response = await fetch('https://marketplace-backend-production-7420.up.railway.app/users/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
