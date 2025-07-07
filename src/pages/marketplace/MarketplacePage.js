@@ -185,7 +185,7 @@ function MarketplacePage() {
         Log out
       </button>
       <div className="flex-grow overflow-y-auto px-4 py-10 flex flex-col items-center">
-        <img src={Logo} alt="Campus Cart Logo" className="w-24 mb-2" />
+        <img src={Logo} alt="Campus Cart Logo" className="w-28 mb-2" />
         <h1 className="text-5xl mb-8 text-main_pink font-light">campus cart</h1>
         <SearchSection setItems={setItems} />
 
