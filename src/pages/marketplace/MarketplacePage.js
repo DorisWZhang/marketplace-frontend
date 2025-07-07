@@ -177,6 +177,13 @@ function MarketplacePage() {
   
   return (
     <div className="flex flex-col h-screen bg-cream">
+      <button className="absolute top-5 left-5 bg-main_pink text-white px-6 py-3 rounded-xl hover:bg-pink-600 transition text-lg shadow"
+        onClick={() => {
+          localStorage.removeItem('token');
+          navigate('/authentrypage');
+         }}>
+        Log out
+      </button>
       <div className="flex-grow overflow-y-auto px-4 py-10 flex flex-col items-center">
         <img src={Logo} alt="Campus Cart Logo" className="w-24 mb-2" />
         <h1 className="text-5xl mb-8 text-main_pink font-light">campus cart</h1>
