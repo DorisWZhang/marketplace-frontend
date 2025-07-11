@@ -179,11 +179,7 @@ function CreateListingPage({ onClose }) {
               latitude={item.latitude}
               longitude={item.longitude}
             />
-            {item.latitude && item.longitude && (
-              <div className="mt-2 text-sm text-gray-600">
-                Selected: {item.latitude.toFixed(5)}, {item.longitude.toFixed(5)}
-              </div>
-            )}
+
           </div>
           <div>
             <label className="block mb-1 font-medium">Image</label>
