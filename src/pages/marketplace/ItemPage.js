@@ -28,7 +28,7 @@ function ItemPage() {
     const checkFavourite = async () => {
       if (user && item.id) {
         try {
-          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/check/${user.id}/${item.id}`);
+          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/${user.id}/${item.id}`);
           if (response.ok) {
             const isFav = await response.json(); // expecting a boolean true/false
             setIsFavourite(isFav);
@@ -144,7 +144,7 @@ function ItemPage() {
     if (user) {
       if (isFavourite) {
         try {
-          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/remove/${user.id}/${item.id}`, {
+          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/${user.id}/${item.id}`, {
             method: 'DELETE',
           });
           if (response.ok) {
@@ -159,7 +159,7 @@ function ItemPage() {
         }
       } else {
         try {
-          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/add`, {
+          const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

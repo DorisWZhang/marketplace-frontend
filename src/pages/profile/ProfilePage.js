@@ -35,7 +35,7 @@ function ProfilePage() {
 
     const fetchUserFavourites = async () => {
       try {
-        const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/getfavourites/${user.id}`);
+        const response = await fetch(`https://marketplace-backend-production-7420.up.railway.app/favourites/${user.id}`);
         if (response.ok) {
           const favourites = await response.json();
           const favouriteItems = favourites.map(fav => fav.itemId);
